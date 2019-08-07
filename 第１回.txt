@@ -1,0 +1,66 @@
+// - glslfan.com --------------------------------------------------------------
+// Ctrl + s or Command + s: compile shader
+// Ctrl + m or Command + m: toggle visibility for codepane
+// ----------------------------------------------------------------------------
+precision mediump float;
+uniform vec2  resolution;     // resolution (width, height)
+uniform vec2  mouse;          // mouse      (0.0 ~ 1.0)
+uniform float time;           // time       (1second == 1.0)
+uniform sampler2D backbuffer; // previous scene
+
+const float PI = 3.1415926;
+
+vec3 hsv(float h, float s, float v){
+    vec4 t = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(vec3(h) + t.xyz) * 6.0 - vec3(t.w));
+    return v * mix(vec3(t.x), clamp(p - vec3(t.x), 0.0, 1.0), s);
+}
+
+float my_change(float offset) {
+    return (sin(mod(time / 4.0 + offset, (2.0 * PI))) + 1.0) / 2.0;
+}
+
+float good_sin(float n) {
+    return (sin(n) + 1.0) / 2.0;
+}
+
+void main(){
+    vec2 p = gl_FragCoord.xy / resolution;
+    
+    vec3 col = vec3(0.0);
+    
+    float teta = mod(time, 2.0 * PI);
+    mat2 mat;
+    mat[0][0] = cos(teta);
+    mat[0][1] = -sin(teta);
+    mat[1][0] = sin(teta);
+    mat[1][1] = -cos(teta);
+    
+    p = mat * p;
+    
+    col =  vec3(my_change(.0), my_change(.0), my_change(.0));
+    col =  vec3(my_change(p.x * p.y), my_change(p.x), my_change(p.y));
+    
+    
+    
+    gl_FragColor = vec4(col, 1.0);
+    
+    float len = distance(p , vec2(0.5, 0.4));
+    
+    
+    if(len<0.3){
+        col = vec3(1.0);
+    }
+    
+    cols = 40;
+    lines = 40;
+    
+    
+    if (false) {
+        col =  vec3(my_change(p.x * p.y), my_change(p.x), my_change(p.y));
+    }
+    
+    
+    
+}
+
